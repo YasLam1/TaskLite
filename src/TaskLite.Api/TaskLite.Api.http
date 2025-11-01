@@ -1,0 +1,6 @@
+@TaskLite.Api_HostAddress = http://localhost:5124
+
+GET {{TaskLite.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
