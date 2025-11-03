@@ -14,6 +14,9 @@ public class CreateUserHandler
         if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email))
             throw new ArgumentNullException(nameof(request));
 
+        if (await _repository.EmailExistsAsync(request.Email, ct))
+            throw new InvalidOperationException("Email is already in use.");
+
         User user = new()
         {
             Id = Guid.NewGuid(),

@@ -9,9 +9,17 @@ namespace TaskLite.Api.Controllers;
 public class ProjectsController : ControllerBase
 {
     private readonly CreateProjectHandler _createProjectHandler;
+    private readonly UpdateProjectHandler _updateProjectHandler;
+    private readonly DeleteProjectHandler _deleteProjectHandler;
 
-    public ProjectsController(CreateProjectHandler createProjectHandler) 
-        => _createProjectHandler = createProjectHandler;
+    public ProjectsController(CreateProjectHandler createProjectHandler,
+        UpdateProjectHandler updateProjectHandler,
+        DeleteProjectHandler deleteProjectHandler)
+    {
+        _createProjectHandler = createProjectHandler;
+        _updateProjectHandler = updateProjectHandler;
+        _deleteProjectHandler = deleteProjectHandler;
+    }
 
     [HttpPost("api/projects")]
     public async Task<IActionResult> Create([FromBody] CreateProjectRequest req, CancellationToken ct)
@@ -21,9 +29,18 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(CreateProjectRequest), new { id = project.Id }, project);
     }
 
-    //[HttpGet("api/projects/owner/{ownerId}")]
-    //public async Task<IActionResult> List(Guid ownerId, CancellationToken ct)
-    //{
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromBody] UpdateProjectRequest req, CancellationToken ct)
+    {
+        var updated = await _updateProjectHandler.HandleAsync(req, ct);
+        return Ok(updated);
+    }
 
-    //}
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await _deleteProjectHandler.HandleAsync(id, ct);
+        return NoContent();
+    }
+
 }

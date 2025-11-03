@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TaskLite.Domain.Entities;
+using Task = System.Threading.Tasks.Task;
 
-namespace TaskLite.Application.Interfaces.Repositories
+namespace TaskLite.Application.Interfaces.Repositories;
+
+public interface ICommentRepository
 {
-    internal class ICommentRepository
-    {
-    }
+    Task<Comment> CreateAsync(Comment comment, CancellationToken ct);
+    Task<Comment?> GetByIdAsync(Guid id, CancellationToken ct);
+    Task<IReadOnlyList<Comment>> ListByTaskAsync(Guid taskId, CancellationToken ct);
+    Task<Comment?> UpdateAsync(Comment comment, CancellationToken ct);
+    Task DeleteAsync(Guid id, CancellationToken ct);
 }

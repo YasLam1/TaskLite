@@ -4,11 +4,6 @@
     <ProjectReference Include="..\TaskLite.Domain\TaskLite.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\Comments\" />
-    <Folder Include="UseCases\Tasks\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Users;
 using TaskLite.Application.UseCases.Users;
+using TaskLite.Domain.Entities;
 
 namespace TaskLite.Api.Controllers;
 
@@ -10,11 +11,18 @@ public class UsersController : ControllerBase
 {
     private readonly CreateUserHandler _createUserHandler;
     private readonly GetUserByIdHandler _getUserByIdHandler;
+    private readonly UpdateUserHandler _updateUserHandler;
+    private readonly DeleteUserHandler _deleteUserHandler;
 
-    public UsersController(CreateUserHandler createUserHandler, GetUserByIdHandler getUserByIdHandler)
+    public UsersController(CreateUserHandler createUserHandler, 
+        GetUserByIdHandler getUserByIdHandler,
+        UpdateUserHandler updateUserHandler,
+        DeleteUserHandler deleteUserHandler)
     {
         _createUserHandler = createUserHandler;
         _getUserByIdHandler = getUserByIdHandler;
+        _updateUserHandler = updateUserHandler;
+        _deleteUserHandler = deleteUserHandler;
     }
 
     [HttpPost]
@@ -33,4 +41,19 @@ public class UsersController : ControllerBase
 
         return Ok(user);
     }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update([FromBody] UpdateUserRequest req, CancellationToken ct)
+    {
+        var updated = await _updateUserHandler.HandleAsync(req, ct);
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await _deleteUserHandler.HandleAsync(id, ct);
+        return NoContent();
+    }
+
 }

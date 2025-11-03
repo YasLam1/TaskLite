@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TaskItem = TaskLite.Domain.Entities.Task;
 
-namespace TaskLite.Application.Interfaces.Repositories
+namespace TaskLite.Application.Interfaces.Repositories;
+
+public interface ITaskRepository
 {
-    internal class ITaskRepository
-    {
-    }
+    Task<TaskItem> CreateAsync(TaskItem task, CancellationToken ct);
+    Task<TaskItem?> GetByIdAsync(Guid id, CancellationToken ct);
+    Task<IReadOnlyList<TaskItem>> ListByProjectAsync(Guid projectId, CancellationToken ct);
+    Task<TaskItem?> UpdateAsync(TaskItem task, CancellationToken ct);
+    Task DeleteAsync(Guid id, CancellationToken ct);
 }

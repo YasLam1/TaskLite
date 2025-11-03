@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskLite.Application.Interfaces.Repositories;
 using TaskLite.Domain.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskLite.Infrastructure.Persistence.Repositories;
 
@@ -24,5 +25,22 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByIdAsync(Guid userId, CancellationToken ct)
     {
         return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    }
+
+    public async Task<User> UpdateAsync(User user, CancellationToken ct)
+    {
+        _appDbContext.Users.Update(user);
+        await _appDbContext.SaveChangesAsync(ct);
+        return user;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken ct)
+    {
+        var entity = await _appDbContext.Users.FindAsync([id], ct);
+        if (entity != null)
+        {
+            _appDbContext.Users.Remove(entity);
+            await _appDbContext.SaveChangesAsync(ct);
+        }
     }
 }

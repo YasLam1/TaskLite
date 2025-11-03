@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskLite.Application.Interfaces.Repositories;
 using TaskLite.Domain.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskLite.Infrastructure.Persistence.Repositories;
 
@@ -29,5 +30,22 @@ public class ProjectRepository : IProjectRepository
             .AsNoTracking()
             .Where(p => p.OwnerId == ownerId)
             .ToListAsync(ct);
+    }
+
+    public async Task<Project> UpdateAsync(Project project, CancellationToken ct)
+    {
+        _appDbContext.Projects.Update(project);
+        await _appDbContext.SaveChangesAsync(ct);
+        return project;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken ct)
+    {
+        var entity = await _appDbContext.Projects.FindAsync([id], ct);
+        if (entity != null)
+        {
+            _appDbContext.Projects.Remove(entity);
+            await _appDbContext.SaveChangesAsync(ct);
+        }
     }
 }
