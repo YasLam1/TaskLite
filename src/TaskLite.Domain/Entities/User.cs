@@ -1,4 +1,5 @@
-﻿namespace TaskLite.Domain.Entities;
+﻿
+namespace TaskLite.Domain.Entities;
 
 public class User
 {

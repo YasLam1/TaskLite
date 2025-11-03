@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Users;
 using TaskLite.Application.UseCases.Users;
-using TaskLite.Domain.Entities;
 
 namespace TaskLite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly CreateUserHandler _createUserHandler;

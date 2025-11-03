@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TaskLite.Application.Interfaces.Repositories;
 using TaskLite.Application.UseCases.Comments;
 using TaskLite.Application.UseCases.Projects;
@@ -6,15 +8,34 @@ using TaskLite.Application.UseCases.Tasks;
 using TaskLite.Application.UseCases.Users;
 using TaskLite.Infrastructure.Persistence;
 using TaskLite.Infrastructure.Persistence.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-string? connectionString = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
+        };
+    });
+builder.Services.AddAuthorization();
+
+string? connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
 
 //Repositories

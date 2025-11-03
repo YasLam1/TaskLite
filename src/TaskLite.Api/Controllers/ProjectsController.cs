@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Projects;
 using TaskLite.Application.UseCases.Projects;
 
@@ -6,6 +7,7 @@ namespace TaskLite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProjectsController : ControllerBase
 {
     private readonly CreateProjectHandler _createProjectHandler;

@@ -22,7 +22,6 @@ public class CreateUserHandler
             Id = Guid.NewGuid(),
             Name = request.Name,
             Email = request.Email,
-            CreatedAt = DateTime.UtcNow,
         };
 
         return await _repository.CreateAsync(user, ct);

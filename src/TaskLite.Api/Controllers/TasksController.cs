@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Tasks;
 using TaskLite.Application.UseCases.Tasks;
 
@@ -6,6 +7,7 @@ namespace TaskLite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public sealed class TasksController : ControllerBase
 {
     private readonly CreateTaskHandler _createTaskHandler;

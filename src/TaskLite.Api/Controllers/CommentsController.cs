@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Comments;
 using TaskLite.Application.UseCases.Comments;
 
@@ -6,6 +7,7 @@ namespace TaskLite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public sealed class CommentsController : ControllerBase
 {
     private readonly CreateCommentHandler _createCommentHandler;
