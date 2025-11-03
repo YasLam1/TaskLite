@@ -6,7 +6,7 @@ namespace TaskLite.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProjectsController : Controller
+public class ProjectsController : ControllerBase
 {
     private readonly CreateProjectHandler _createProjectHandler;
 
