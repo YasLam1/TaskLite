@@ -23,7 +23,13 @@ public class ProjectsController : ControllerBase
         _deleteProjectHandler = deleteProjectHandler;
     }
 
-    [HttpPost("api/projects")]
+    [HttpGet]
+    public IActionResult GetTest()
+    {
+        return Ok(new[] { new { Id = 1, Name = "Test Project" } });
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateProjectRequest req, CancellationToken ct)
     {
         var project = await _createProjectHandler.HandleAsync(req, ct);
@@ -31,7 +37,7 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(CreateProjectRequest), new { id = project.Id }, project);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateProjectRequest req, CancellationToken ct)
     {
         var updated = await _updateProjectHandler.HandleAsync(req, ct);

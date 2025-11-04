@@ -12,8 +12,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         b.HasKey(x => x.Id);
 
         b.Property(x => x.Email).IsRequired().HasMaxLength(256);
-        b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-        b.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+        b.Property(x => x.FullName).IsRequired().HasMaxLength(128);
 
         b.HasMany(u => u.ProjectsOwned)
          .WithOne(p => p.Owner)

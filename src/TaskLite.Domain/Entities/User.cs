@@ -1,12 +1,10 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity;
+
 namespace TaskLite.Domain.Entities;
 
-public class User
+public class User : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
-    public string Email { get; set; } = default!;
-    public string Name { get; set; } = default!; 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string FullName { get; set; } = default!;
 
     // navigation
     public ICollection<Project> ProjectsOwned { get; set; } = [];

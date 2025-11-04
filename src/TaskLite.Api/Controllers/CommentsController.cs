@@ -42,6 +42,7 @@ public sealed class CommentsController : ControllerBase
         return Ok(comments);
     }
 
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateCommentRequest req, CancellationToken ct)
     {
         var updated = await _updateCommentHandler.HandleAsync(req, ct);

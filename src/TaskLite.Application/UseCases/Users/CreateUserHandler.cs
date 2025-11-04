@@ -20,7 +20,7 @@ public class CreateUserHandler
         User user = new()
         {
             Id = Guid.NewGuid(),
-            Name = request.Name,
+            FullName = request.Name,
             Email = request.Email,
         };
 

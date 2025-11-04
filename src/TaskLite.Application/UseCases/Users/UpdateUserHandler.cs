@@ -14,7 +14,7 @@ public sealed class UpdateUserHandler
         var user = await _users.GetByIdAsync(req.Id, ct);
         if (user is null) return null;
 
-        if (req.Name != null) user.Name = req.Name.Trim();
+        if (req.Name != null) user.FullName = req.Name.Trim();
         if (req.Email != null) user.Email = req.Email.Trim().ToLowerInvariant();
 
         return await _users.UpdateAsync(user, ct);
