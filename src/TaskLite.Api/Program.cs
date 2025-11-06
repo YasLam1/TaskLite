@@ -63,10 +63,7 @@ builder.Services.AddScoped<DeleteProjectHandler>();
 builder.Services.AddScoped<UpdateProjectHandler>();
 
 // Users Use cases
-builder.Services.AddScoped<CreateUserHandler>();
-builder.Services.AddScoped<GetUserByIdHandler>();
 builder.Services.AddScoped<DeleteUserHandler>();
-builder.Services.AddScoped<UpdateUserHandler>();
 
 // Tasks Use cases
 builder.Services.AddScoped<CreateTaskHandler>();

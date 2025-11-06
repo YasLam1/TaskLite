@@ -1,8 +1,9 @@
-﻿namespace TaskLite.Application.DTOs.Users;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TaskLite.Application.DTOs.Users;
 
 public sealed class UpdateUserRequest
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    [Required, StringLength(100)]
+    public string FullName { get; set; } = string.Empty;
 }

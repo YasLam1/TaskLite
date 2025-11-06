@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TaskLite.Application.DTOs.Users;
-using TaskLite.Application.UseCases.Users;
+using TaskLite.Domain.Entities;
 
 namespace TaskLite.Api.Controllers;
 
@@ -10,50 +11,45 @@ namespace TaskLite.Api.Controllers;
 [Authorize]
 public class UsersController : ControllerBase
 {
-    private readonly CreateUserHandler _createUserHandler;
-    private readonly GetUserByIdHandler _getUserByIdHandler;
-    private readonly UpdateUserHandler _updateUserHandler;
-    private readonly DeleteUserHandler _deleteUserHandler;
+    private readonly UserManager<User> _userManager;
 
-    public UsersController(CreateUserHandler createUserHandler, 
-        GetUserByIdHandler getUserByIdHandler,
-        UpdateUserHandler updateUserHandler,
-        DeleteUserHandler deleteUserHandler)
+    public UsersController(UserManager<User> userManager)
     {
-        _createUserHandler = createUserHandler;
-        _getUserByIdHandler = getUserByIdHandler;
-        _updateUserHandler = updateUserHandler;
-        _deleteUserHandler = deleteUserHandler;
+        _userManager = userManager;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateUserRequest req, CancellationToken ct)
+    [HttpPut("update")]
+    public async Task<IActionResult> Update([FromBody] UpdateUserRequest req)
     {
-        var user = await _createUserHandler.HandleAsync(req, ct);
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
-    }
-
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
-    {
-        var user = await _getUserByIdHandler.HandleAsync(new GetUserByIdRequest { Id = id }, ct);
-        if (user is null)
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
             return NotFound();
 
-        return Ok(user);
+        user.FullName = req.FullName;
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok(new UserResponse
+        {
+            Id = user.Id,
+            Email = user.Email!,
+            FullName = user.FullName
+        });
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update([FromBody] UpdateUserRequest req, CancellationToken ct)
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteById(string id)
     {
-        var updated = await _updateUserHandler.HandleAsync(req, ct);
-        return Ok(updated);
-    }
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return NotFound();
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
-    {
-        await _deleteUserHandler.HandleAsync(id, ct);
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
         return NoContent();
     }
 
